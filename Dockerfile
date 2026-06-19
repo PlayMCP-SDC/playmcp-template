@@ -6,7 +6,7 @@ WORKDIR /app
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # 의존성 파일 먼저 복사 (레이어 캐시 활용)
-COPY pyproject.toml uv.lock ./
+COPY pyproject.toml uv.lock README.md ./
 COPY src/ ./src/
 
 # 패키지 설치
