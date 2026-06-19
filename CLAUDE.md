@@ -19,6 +19,28 @@
    `register_tools` 에서 등록한다. 새 카테고리(resources/prompts)도 같은 패턴.
 4. 비밀키/토큰은 `.env` 로만 관리. `.env` 커밋 금지(`.gitignore` 포함), `.env.example` 만 커밋.
 
+## 전송 방식 (transport)
+
+- 전송 방식은 환경변수 `MCP_TRANSPORT` 로 분기한다 (`server.py`).
+  - `stdio` (기본) — 로컬 개발 / uvx 실행
+  - `streamable-http` — 컨테이너/카카오 클라우드 배포. 엔드포인트 `/<host>:<port>/mcp`
+- PlayMCP(KC) 는 **`streamable-http` 만 지원**한다. `sse`/`stdio` 로는 등록 불가.
+- FastMCP 인스턴스는 **stateless 로 구성**한다 (`stateless_http=True`, `json_response=True`).
+
+## PlayMCP 등록 규칙 (필수 — 어기면 심사 반려)
+
+도구를 추가/수정할 때 아래를 반드시 지킨다. 출처: PlayMCP 서버 개발가이드.
+
+1. **모든 도구에 `annotations` 5종 값 전부 지정** (FastMCP `@mcp.tool(annotations=...)`):
+   `title`, `readOnlyHint`, `destructiveHint`, `openWorldHint`, `idempotentHint`.
+   → 실전 예시는 [`src/playmcp_server/tools/README.md`](src/playmcp_server/tools/README.md) 참고.
+2. **도구 개수 ≤ 20개** (3~10개 권장). 너무 많으면 LLM 툴콜 정확도가 떨어진다.
+3. **이름 규칙**: 도구/서버 이름에 `kakao` 사용 금지(대소문자·위치 무관).
+   도구 이름은 1~128자, `A-Za-z0-9_-` 만, 중복 금지(대소문자 구분).
+4. **`description`**: 1,024자 이내 + 서비스명 포함, 영문 작성 권장.
+5. **성능**: 도구 응답속도 평균 100ms 이내 / p99 3,000ms 이내.
+6. 제출 전 **MCP Inspector** 로 표준 스펙 준수 점검.
+
 ## 배포 체크리스트
 
 - [ ] 버전 올릴 때 **`pyproject.toml` 의 `version` 과 `server.json` 의 `version` 을 동시에 수정**

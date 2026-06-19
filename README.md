@@ -118,8 +118,11 @@ playmcp-server/
 ### 새 도구 추가하는 법
 
 1. `src/playmcp_server/tools/` 에 새 모듈 작성 (`example.py` 참고)
-2. 각 도구는 **타입 힌트 + docstring** 작성 (FastMCP 가 스키마 자동 생성)
+2. 각 도구는 **타입 힌트 + docstring + `annotations` 5종** 작성 (FastMCP 가 스키마 자동 생성)
 3. `tools/__init__.py` 의 `register_tools` 에서 새 모듈 등록
+
+> 자세한 절차·예시 코드·체크리스트는 [`tools/README.md`](src/playmcp_server/tools/README.md),
+> 전체 코드 규칙은 [`CLAUDE.md`](CLAUDE.md) 참고.
 
 ---
 
